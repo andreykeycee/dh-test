@@ -1,28 +1,44 @@
 <template>
-  <div class="followers-block">
-    <div class="title-block">
-      <div class="title-block__sub-type">{{ displaySettings.subType }}</div>
-      <div class="title-block__type">{{ displaySettings.type }}</div>
-    </div>
-
-
+  <div class="followers-block bordered">
+    <TitleBlock
+      :title="displaySettings.subType"
+      :sub-title="displaySettings.type"
+    />
+    <MainBlock
+      :elements="data.elements"
+      @update-elements="updateElements"
+    />
   </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { MockData } from '@/utils'
+import { _Element, MockData } from '@/utils'
+import TitleBlock from '@/components/TitleBlock.vue'
+import MainBlock from '@/components/MainBlock.vue'
 
-@Component({})
+@Component({
+  components: {MainBlock, TitleBlock }
+})
 export default class FollowersBlock extends Vue {
-  @Prop({ default: () => ({}) }) mockData!: MockData
+  @Prop({ default: () => ({}) }) data: MockData
 
   get displaySettings () {
-    return this.mockData.displaySettings
+    return this.data.displaySettings
+  }
+
+  updateElements (elements: _Element[]) {
+    const newData = {
+      ...this.data,
+      elements
+    }
+
+    this.$emit('update-data', newData)
   }
 }
 </script>
 
 <style lang="sass" scoped>
-
+.followers-block
+  border-radius: 10px
 </style>
